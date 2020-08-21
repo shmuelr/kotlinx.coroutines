@@ -168,7 +168,7 @@ class FlowInvariantsTest : TestBase() {
                 channel.consumeEach {
                     emit(it)
                 }
-            }
+        b    }
         }
         assertEquals(listOf(1, 1), flowOf(1, 1).buffer().toList())
     }
