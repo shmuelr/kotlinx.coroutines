@@ -259,6 +259,34 @@ class FlowInvariantsTest : TestBase() {
         }
     }
 
+    @Test
+    fun foo() = runTest {
+        assertEquals(testFlow().toList(), listOf(999))
+    }
+
+    private fun testFlow(): Flow<Int> {
+        return combine(
+            flowOne(),
+            flowTwo().map { it.getOrNull() }
+        ) { first: Int, second: Int? ->
+            second ?: return@combine 999
+            first
+        }
+    }
+
+    private fun flowOne(): Flow<Int> {
+        return flow {
+            emit(1)
+        }
+    }
+
+    private fun flowTwo(): Flow<Result<Int>> {
+        return flow {
+            emit(Result.failure<Int>(RuntimeException()))
+        }
+    }
+
+
     private suspend fun emptyContextTest(block: Flow<Int>.() -> Flow<Int>) {
         suspend fun collector(): Int {
             var result: Int = -1
